@@ -21,7 +21,7 @@ var outputStream = fs.createWriteStream(fname + ".new"),
     transformStream = JSONStream.stringify();
 transformStream.pipe( outputStream );
 for(var i =0; i<=data.length-1; i++) {
-  transformStream.write(data.splice(0,1000));
+  transformStream.write(data.splice(0,10000));
 }
 transformStream.end();
 outputStream.on(
