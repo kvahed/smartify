@@ -9,18 +9,20 @@ getStream = function (fname) {
       parser = JSONStream.parse('*');
   return stream.pipe(parser);
 },
-getStream("../dump/" + fname).pipe(es.mapSync(function (d) {
+getStream("/home/ubuntu/new/" + fname).pipe(es.mapSync(function (d) {
   if (d.hasOwnProperty("_key")) {
     d.shard_by = d.orgId.substring(0,2);
     d._key = d.shard_by + ":" + d._key;
     data.push(d);
   }
-})).then( function () {  console.log("Done reading.")} )
+}));
 
 var outputStream = fs.createWriteStream(fname + ".new"),
-var transformStream = JSONStream.stringify();
-transformStream.pipe( outputStream ),
-data.forEach (transformStream.write);
+    transformStream = JSONStream.stringify();
+transformStream.pipe( outputStream );
+for(var i =0; i<=data.length-1; i++) {
+  transformStream.write(data.splice(0,1000));
+}
 transformStream.end();
 outputStream.on(
   "finish",
@@ -28,3 +30,4 @@ outputStream.on(
     console.log("Done writing");
   }
 );
+
